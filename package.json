@@ -1,0 +1,57 @@
+{
+  "name": "node.js",
+  "version": "0.0.1",
+  "description": "Node.js backend application",
+  "main": "dist/app.js",
+  "private": false,
+  "scripts": {
+    "dev": "nodemon --exec babel-node src/app.js",
+    "build": "rm -rf dist/ && babel src --out-dir dist/",
+    "start": "node dist/app.js"
+  },
+  "dependencies": {
+    "@hapi/boom": "^9.1.1",
+    "@hapi/joi": "^17.1.0",
+    "body-parser": "^1.19.0",
+    "colors": "^1.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "8.2.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "glob": "^7.1.6",
+    "helmet": "^4.4.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.11.12",
+    "mongoose-delete": "^0.5.3",
+    "session-file-store": "^1.5.0",
+    "winston": "^3.3.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.12.10",
+    "@babel/core": "^7.12.10",
+    "@babel/node": "^7.12.10",
+    "@babel/plugin-proposal-class-properties": "^7.12.1",
+    "@babel/plugin-transform-runtime": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "@babel/runtime": "^7.12.5",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.18.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "nodemon": "^2.0.7"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env"
+    ],
+    "plugins": [
+      "@babel/transform-runtime",
+      "@babel/proposal-class-properties"
+    ]
+  },
+  "engine": {
+    "node": ">=12.*",
+    "npm": ">=6.*"
+  },
+  "license": "ISC"
+}

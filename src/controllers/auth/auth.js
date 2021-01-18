@@ -1,10 +1,11 @@
 import Joi from '@hapi/joi';
-import { notFound } from '@hapi/boom';
+import { notFound, forbidden } from '@hapi/boom';
 import { models } from 'mongoose';
 import jwt from 'jsonwebtoken';
 
 import { METHODS } from '../../config/constants';
 import { assert } from '../../helpers';
+import config from '../../config/index';
 
 export const login = {
   method: METHODS.POST,
@@ -22,11 +23,9 @@ export const login = {
     if (!users) {
       return notFound('User is not found');
     }
-    const token = jwt.sign({
-      exp: Math.floor(Date.now() / 1000) + (60 * 60),
-    });
-
-    res.json();
+    const token = jwt.sign({ email }, config.salt.salt, { expiresIn: '1h' });
+    const refreshToken = jwt.sign({ email }, config.salt.salt, { expiresIn: '1d' });
+    res.json({ token, refreshToken });
   },
 };
 
@@ -44,5 +43,34 @@ export const register = {
     const user = await models.User.findOne({ _id: req.params.id });
     assert(user, notFound, 'User not found');
     res.json({ data: user });
+  },
+};
+
+export const token = {
+  method: METHODS.POST,
+  path: '/token',
+  validate: {
+    body: {
+      refreshToken: Joi.string().required(),
+    },
+  },
+  async handler(req, res) {
+    const { token } = req.body;
+
+    if (!token) {
+      return notFound('Not refresh token');
+    }
+
+    const verify = await jwt.verify(token, config.secret);
+
+    if (!verify) {
+      return forbidden('Wrong refresh token');
+    }
+    
+    const { email } = verify;
+    const newToken = jwt.sign({ email }, config.salt.salt, { expiresIn: '1h' });
+    const refreshToken = jwt.sign({ email }, config.salt.salt, { expiresIn: '1d' });
+
+    res.json({ token: newToken, refreshToken });
   },
 };

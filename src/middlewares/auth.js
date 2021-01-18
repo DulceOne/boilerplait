@@ -16,7 +16,7 @@ export default function auth(schema) {
         return unauthorized('Bad access token');
       }
       req.user = user;
+      next();
     });
-    next();
   });
 }
